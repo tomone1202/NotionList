@@ -35,6 +35,8 @@ export default {
 <style lang="scss">
 html{
   font-size: 14px;
+  min-height: 900px;
+  background-color: rgb(220, 53, 69);
 }
 #app {
     font-family: "Font-Custom" !important;

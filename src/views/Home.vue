@@ -7,6 +7,7 @@
                         <el-input
                             v-model="keyword"
                             placeholder="請輸入國家名稱"
+                            @keyup.enter="onSubmit"
                         ></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -228,10 +229,12 @@ export default {
                     .get(`${API.search}/name/${this.keyword}`, "")
                     .then(async (res) => {
                         this.totalData = res.data.length;
+                        this.selectPageList=[]
                         this.lists = _.orderBy(res.data, "name['official']", [
                             "asc",
                         ]);
-                        this.pagination();
+                        await this.pagination();
+                        this.selectPageList = this.pageList[0];
                         this.currentPage = null;
                         this.currentPage = 1;
                         loading.close();
