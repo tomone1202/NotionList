@@ -1,27 +1,31 @@
 <template>
     <div class="bg-danger">
         <div class="container py-3">
-            <el-form :inline="true" :model="formInline">
-                <el-form-item>
-                    <el-input
-                        v-model="keyword"
-                        placeholder="請輸入國家名稱"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">搜尋</el-button>
-                </el-form-item>
-            </el-form>
+            <div class="d-flex justify-content-around">
+                <el-form :inline="true" :model="formInline">
+                    <el-form-item>
+                        <el-input
+                            v-model="keyword"
+                            placeholder="請輸入國家名稱"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit"
+                            >搜尋</el-button
+                        >
+                    </el-form-item>
+                </el-form>
 
-            <el-pagination
-                :page-size="25"
-                background
-                layout="prev, pager, next"
-                :total="totalData"
-                v-model:currentPage="currentPage"
-                @current-change="handleCurrentChange"
-            >
-            </el-pagination>
+                <el-pagination
+                    :page-size="25"
+                    background
+                    layout="prev, pager, next"
+                    :total="totalData"
+                    v-model:currentPage="currentPage"
+                    @current-change="handleCurrentChange"
+                >
+                </el-pagination>
+            </div>
 
             <table class="table table-hover table-dark rounded">
                 <thead>
@@ -32,9 +36,9 @@
                             class="text-center"
                             :class="`field-scale-${field.scale}`"
                         >
-                            <span v-if="field.key == 'name'">
+                            <span @click="order" role="button" style="curso" v-if="field.key == 'name'">
                                 {{ field.label }}
-                                <span @click="order">{{
+                                <span >{{
                                     isAsc == "asc" ? "▼" : "▲"
                                 }}</span>
                             </span>
@@ -107,10 +111,11 @@
 
 <script>
 // @ is an alias to /src
+import { ElLoading } from "element-plus";
 import Detail from "./detail.vue";
 const API = {
     getList: "https://restcountries.com/v3.1/all",
-    search: "https://restcountries.com/v3.1/",
+    search: "https://restcountries.com/v3.1",
 };
 import getColumn from "./column";
 export default {
@@ -138,6 +143,11 @@ export default {
             this.selectPageList = this.pageList[p1 - 1];
         },
         order: function () {
+            const loading = ElLoading.service({
+                lock: true,
+                text: "Loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
             if (this.isAsc == "asc") {
                 this.isAsc = "desc";
             } else {
@@ -150,8 +160,14 @@ export default {
             this.selectPageList = this.pageList[0];
             this.currentPage = null;
             this.currentPage = 1;
+            loading.close();
         },
         getList: async function () {
+            const loading = ElLoading.service({
+                lock: true,
+                text: "Loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
             await axios
                 .get(API.getList, "")
                 .then(async (res) => {
@@ -162,12 +178,18 @@ export default {
                     this.isAsc = "asc";
                     this.pagination();
                     this.selectPageList = this.pageList[0];
+                    loading.close();
                 })
                 .catch((err) => {
                     console.error(err);
                 });
         },
         pagination: function () {
+            const loading = ElLoading.service({
+                lock: true,
+                text: "Loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
             let pageList = [[]];
             let page = 0;
             this.lists.forEach((params) => {
@@ -180,6 +202,7 @@ export default {
                 }
             });
             this.pageList = pageList;
+            loading.close();
         },
         returnIdd(idd) {
             let returnStr = "";
@@ -195,6 +218,11 @@ export default {
             }
         },
         onSubmit: async function () {
+            const loading = ElLoading.service({
+                lock: true,
+                text: "Loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
             if (this.keyword) {
                 await axios
                     .get(`${API.search}/name/${this.keyword}`, "")
@@ -206,6 +234,7 @@ export default {
                         this.pagination();
                         this.currentPage = null;
                         this.currentPage = 1;
+                        loading.close();
                     })
                     .catch((err) => {
                         console.error(err);
