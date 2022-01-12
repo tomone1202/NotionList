@@ -28,7 +28,7 @@
                             </tr>
                             <tr>
                                 <td>國家首都</td>
-                                <td>{{ records?.capital[0] || "" }}</td>
+                                <td>{{ records?.capital ? records?.capital[0]:"" }}</td>
                             </tr>
                             <tr>
                                 <td>國家車輛行駛方向</td>
@@ -100,6 +100,7 @@ export default {
             return this.$refs.modal.hide();
         },
         showDetail: async function (record) {
+            console.log(`record`, record)
             this.records = await JSON.parse(JSON.stringify(record));
             this.show();
         },
