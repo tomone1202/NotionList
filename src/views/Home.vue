@@ -240,7 +240,11 @@ export default {
                         loading.close();
                     })
                     .catch((err) => {
-                        console.error(err);
+                        this.totalData=0
+                        this.selectPageList=[]
+                        this.currentPage = null;
+                        this.currentPage = 1;
+                        loading.close();
                     });
             } else {
                 this.getList();
