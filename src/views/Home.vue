@@ -191,18 +191,18 @@ export default {
                 text: "Loading",
                 background: "rgba(0, 0, 0, 0.7)",
             });
-            let pageList = [[]];
-            let page = 0;
-            this.lists.forEach((params) => {
-                if (pageList[page].length < 24) {
-                    pageList[page].push(params);
-                } else {
-                    pageList[page].push(params);
-                    page += 1;
-                    pageList[page] = [];
-                }
-            });
-            this.pageList = pageList;
+            // let pageList = [[]];
+            // let page = 0;
+            // this.lists.forEach((params) => {
+            //     if (pageList[page].length < 24) {
+            //         pageList[page].push(params);
+            //     } else {
+            //         pageList[page].push(params);
+            //         page += 1;
+            //         pageList[page] = [];
+            //     }
+            // });
+            this.pageList = _.chunk(this.lists,25)
             loading.close();
         },
         returnIdd(idd) {
